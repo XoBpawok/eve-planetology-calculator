@@ -1,0 +1,39 @@
+Resource,cubic metre per 1,price avarage,price lowest,energy
+Base Metals,0.04,1055,999,
+Condensates,0.02,321,669,
+Condensed Alloy,0.01,641,600,
+Construction Blocks,0.01,242,499,
+Coolant,0.02,267,201,
+Crystal Compound,0.01,848,775,
+Dark Compound,0.01,771,766,
+Fiber Composite,0.01,425,400,
+Gleaming Alloy,0.01,209,304,
+Glossy Compound,0.01,382,419,
+Heavy Metals,0.01,692,615,
+Heavy Water,0.01,79,74,2
+Industrial Fibers,0.04,958,1997,
+Ionic Solutions,0.04,1376,1328,37
+Liquid Ozone,0.03,439,475,13
+Lucent Compound,0.01,833,685,
+Lustering Alloy,0.01,562,547,
+Motley Compound,0.01,901,890,
+Nanites,0.04,1991,2499,
+Noble Gas,0.01,223,284,
+Noble Metals,0.01,409,537,
+Opulent Compound,0.01,870,648,
+Oxygen Isotopes,0.05,4535,3700,83
+Plasmoids,0.06,10798,10200,191
+Polyaramids,0.02,207,341,
+Precious Alloy,0.01,769,837,
+Reactive Gas,0.01,135,140,
+Reactive Metals,0.04,1275,1190,
+Sheen Compound,0.01,487,454,
+Silicate Glass,0.02,1062,1395,
+Smartfab Units,0.02,314,295,
+Supertensile Plastics,0.02,487,564,
+Suspended Plasma,0.02,214,179,5
+Toxic Metals,0.04,1995,1869,
+Precious Metals,0.04,9971,10683,
+Non-CS Srystals,0.01,19996,23949,
+Polytextiles,0.02,320,,
+Enriched Uranium Concentrate,0.01,65908,74295,500
