@@ -1,0 +1,201 @@
+{
+  "fetchedAt": "2026-07-26T16:17:41.437Z",
+  "latestDate": "2026-01-21T11:58:22.000Z",
+  "resources": [
+    {
+      "name": "Lustering Alloy",
+      "avgPrice": 516.99,
+      "iconUrl": "https://echoes.mobi/public/icons/200000000.png"
+    },
+    {
+      "name": "Sheen Compound",
+      "avgPrice": 571.17,
+      "iconUrl": "https://echoes.mobi/public/icons/200000001.png"
+    },
+    {
+      "name": "Gleaming Alloy",
+      "avgPrice": 201.73,
+      "iconUrl": "https://echoes.mobi/public/icons/200000002.png"
+    },
+    {
+      "name": "Condensed Alloy",
+      "avgPrice": 309.91,
+      "iconUrl": "https://echoes.mobi/public/icons/200000003.png"
+    },
+    {
+      "name": "Precious Alloy",
+      "avgPrice": 802.07,
+      "iconUrl": "https://echoes.mobi/public/icons/200000004.png"
+    },
+    {
+      "name": "Motley Compound",
+      "avgPrice": 638.82,
+      "iconUrl": "https://echoes.mobi/public/icons/200000005.png"
+    },
+    {
+      "name": "Fiber Composite",
+      "avgPrice": 243.13,
+      "iconUrl": "https://echoes.mobi/public/icons/200000006.png"
+    },
+    {
+      "name": "Lucent Compound",
+      "avgPrice": 417.87,
+      "iconUrl": "https://echoes.mobi/public/icons/200000007.png"
+    },
+    {
+      "name": "Opulent Compound",
+      "avgPrice": 392.24,
+      "iconUrl": "https://echoes.mobi/public/icons/200000008.png"
+    },
+    {
+      "name": "Glossy Compound",
+      "avgPrice": 273.15,
+      "iconUrl": "https://echoes.mobi/public/icons/200000009.png"
+    },
+    {
+      "name": "Crystal Compound",
+      "avgPrice": 589.05,
+      "iconUrl": "https://echoes.mobi/public/icons/200000010.png"
+    },
+    {
+      "name": "Dark Compound",
+      "avgPrice": 626.07,
+      "iconUrl": "https://echoes.mobi/public/icons/200000011.png"
+    },
+    {
+      "name": "Reactive Gas",
+      "avgPrice": 108.3,
+      "iconUrl": "https://echoes.mobi/public/icons/200000018.png"
+    },
+    {
+      "name": "Noble Gas",
+      "avgPrice": 269.57,
+      "iconUrl": "https://echoes.mobi/public/icons/200000019.png"
+    },
+    {
+      "name": "Base Metals",
+      "avgPrice": 1555.27,
+      "iconUrl": "https://echoes.mobi/public/icons/200000020.png"
+    },
+    {
+      "name": "Heavy Metals",
+      "avgPrice": 448.42,
+      "iconUrl": "https://echoes.mobi/public/icons/200000021.png"
+    },
+    {
+      "name": "Noble Metals",
+      "avgPrice": 383.47,
+      "iconUrl": "https://echoes.mobi/public/icons/200000022.png"
+    },
+    {
+      "name": "Reactive Metals",
+      "avgPrice": 863.09,
+      "iconUrl": "https://echoes.mobi/public/icons/200000023.png"
+    },
+    {
+      "name": "Toxic Metals",
+      "avgPrice": 1297.39,
+      "iconUrl": "https://echoes.mobi/public/icons/200000024.png"
+    },
+    {
+      "name": "Industrial Fibers",
+      "avgPrice": 1621.21,
+      "iconUrl": "https://echoes.mobi/public/icons/200000025.png"
+    },
+    {
+      "name": "Supertensile Plastics",
+      "avgPrice": 690.37,
+      "iconUrl": "https://echoes.mobi/public/icons/200000026.png"
+    },
+    {
+      "name": "Polyaramids",
+      "avgPrice": 203.92,
+      "iconUrl": "https://echoes.mobi/public/icons/200000027.png"
+    },
+    {
+      "name": "Coolant",
+      "avgPrice": 327.07,
+      "iconUrl": "https://echoes.mobi/public/icons/200000028.png"
+    },
+    {
+      "name": "Condensates",
+      "avgPrice": 492.61,
+      "iconUrl": "https://echoes.mobi/public/icons/200000029.png"
+    },
+    {
+      "name": "Construction Blocks",
+      "avgPrice": 340.92,
+      "iconUrl": "https://echoes.mobi/public/icons/200000030.png"
+    },
+    {
+      "name": "Nanites",
+      "avgPrice": 1565.09,
+      "iconUrl": "https://echoes.mobi/public/icons/200000031.png"
+    },
+    {
+      "name": "Silicate Glass",
+      "avgPrice": 823.78,
+      "iconUrl": "https://echoes.mobi/public/icons/200000032.png"
+    },
+    {
+      "name": "Smartfab Units",
+      "avgPrice": 376.47,
+      "iconUrl": "https://echoes.mobi/public/icons/200000033.png"
+    },
+    {
+      "name": "Precious Metals",
+      "avgPrice": 15850.71,
+      "iconUrl": "https://echoes.mobi/public/icons/200000034.png"
+    },
+    {
+      "name": "Non-CS Crystals",
+      "avgPrice": 28958.13,
+      "iconUrl": "https://echoes.mobi/public/icons/200000035.png"
+    },
+    {
+      "name": "Polytextiles",
+      "avgPrice": 0,
+      "iconUrl": "https://echoes.mobi/public/icons/200000036.png"
+    },
+    {
+      "name": "Heavy Water",
+      "avgPrice": 77.45,
+      "iconUrl": "https://echoes.mobi/public/icons/200000012.png"
+    },
+    {
+      "name": "Suspended Plasma",
+      "avgPrice": 169.26,
+      "iconUrl": "https://echoes.mobi/public/icons/200000013.png"
+    },
+    {
+      "name": "Liquid Ozone",
+      "avgPrice": 432.37,
+      "iconUrl": "https://echoes.mobi/public/icons/200000014.png"
+    },
+    {
+      "name": "Ionic Solutions",
+      "avgPrice": 1260.64,
+      "iconUrl": "https://echoes.mobi/public/icons/200000015.png"
+    },
+    {
+      "name": "Oxygen Isotopes",
+      "avgPrice": 3582.87,
+      "iconUrl": "https://echoes.mobi/public/icons/200000016.png"
+    },
+    {
+      "name": "Plasmoids",
+      "avgPrice": 9403.9,
+      "iconUrl": "https://echoes.mobi/public/icons/200000017.png"
+    },
+    {
+      "name": "Heavy Water",
+      "avgPrice": 0,
+      "iconUrl": "https://echoes.mobi/public/icons/200000012.png"
+    },
+    {
+      "name": "Enriched Uranium Concentrate",
+      "avgPrice": 52065.22,
+      "iconUrl": "https://echoes.mobi/public/icons/42002000019.png"
+    }
+  ]
+}

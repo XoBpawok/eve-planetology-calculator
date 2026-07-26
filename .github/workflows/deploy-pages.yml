@@ -4,6 +4,10 @@ on:
   push:
     branches: [master]
   workflow_dispatch:
+  schedule:
+    # Keeps the deployed average-price date from going stale even when
+    # nobody pushes for a while.
+    - cron: '17 4 * * *'
 
 permissions:
   contents: read
@@ -23,6 +27,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Refresh echoes.mobi prices
+        run: node scripts/fetch-echoes-prices.mjs
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact

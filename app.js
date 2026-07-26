@@ -15,10 +15,13 @@ const state = {
   echoesLatestDate: null,
 };
 
-// EVE Echoes community API (echoes.mobi): supplies this week's average market
-// price and an icon per item. Used to keep "Середня ціна" current without
-// hand-editing the bundled CSV, and to show an icon next to each resource name.
-const ECHOES_API_URL = 'https://echoes.mobi/api/items?categoryName=Planetary%20Resources&itemsPerPage=300';
+// This week's average market price and an icon per item, sourced from the
+// echoes.mobi community API. echoes.mobi doesn't send Access-Control-Allow-Origin,
+// so the browser can't fetch it cross-origin directly; scripts/fetch-echoes-prices.mjs
+// fetches it server-side (in CI, on every deploy) and writes this same-origin
+// file instead. Used to keep "Середня ціна" current without hand-editing the
+// bundled CSV, and to show an icon next to each resource name.
+const ECHOES_PRICES_URL = './data/echoes-prices.json';
 
 // Before the price-override feature existed, this is when the bundled CSV's
 // market-lowest prices were last taken from the game by hand.
@@ -282,31 +285,19 @@ async function fetchEchoesResourceData() {
   const prices = new Map();
   let latestDate = null;
   try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 8000);
-    const response = await fetch(ECHOES_API_URL, {
-      headers: { Accept: 'application/json' },
-      signal: controller.signal,
-    });
-    clearTimeout(timeout);
+    const response = await fetch(ECHOES_PRICES_URL, { headers: { Accept: 'application/json' } });
     if (!response.ok) return { prices, latestDate };
-    const items = await response.json();
-    for (const item of items) {
+    const data = await response.json();
+    for (const item of data.resources ?? []) {
       const name = item.name?.trim();
       if (!name) continue;
-      const price = Number(item.weekly_average_price);
-      prices.set(name, {
-        avgPrice: Number.isFinite(price) ? price : null,
-        iconUrl: item.icon_url || null,
-      });
-      const updatedAt = item.date_updated ? new Date(item.date_updated) : null;
-      if (updatedAt && !Number.isNaN(updatedAt.getTime()) && (!latestDate || updatedAt > latestDate)) {
-        latestDate = updatedAt;
-      }
+      prices.set(name, { avgPrice: item.avgPrice ?? null, iconUrl: item.iconUrl ?? null });
     }
+    const parsedLatestDate = data.latestDate ? new Date(data.latestDate) : null;
+    if (parsedLatestDate && !Number.isNaN(parsedLatestDate.getTime())) latestDate = parsedLatestDate;
   } catch {
-    // Offline, blocked, or echoes.mobi is unreachable — keep the CSV's average
-    // price and skip icons rather than failing the whole page.
+    // Offline, blocked, or data/echoes-prices.json is missing — keep the CSV's
+    // average price and skip icons rather than failing the whole page.
   }
   return { prices, latestDate };
 }
