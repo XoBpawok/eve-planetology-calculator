@@ -42,7 +42,6 @@ body {
   background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
   background-position: 0 0, 0 0, 0 0, center;
   background-size: auto, auto, 100% 100%, cover;
-  background-attachment: fixed, fixed, fixed, fixed;
   min-height: 100vh;
   font-size: 15px;
 }

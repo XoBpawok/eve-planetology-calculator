@@ -192,6 +192,8 @@ function loadPersistedState() {
     if (parsed.lastManualPriceEditAt) {
       state.lastManualPriceEditAt = parsed.lastManualPriceEditAt;
     }
+    if (parsed.planetsCount) els.planetsCount.value = parsed.planetsCount;
+    if (parsed.drillsCount) els.drillsCount.value = parsed.drillsCount;
   } catch {
     state.savedFilters = null;
   }
@@ -206,6 +208,8 @@ function persistState() {
     },
     priceOverrides: Object.fromEntries(state.priceOverrides),
     lastManualPriceEditAt: state.lastManualPriceEditAt,
+    planetsCount: els.planetsCount.value,
+    drillsCount: els.drillsCount.value,
   };
   localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
 }
