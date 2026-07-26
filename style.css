@@ -415,6 +415,20 @@ input[type='number']:focus {
   background: var(--cyan-dim);
 }
 
+/* On phones, size all three checklists (regions, constellations, resources) to the
+   same height — enough for 8 rows of the resource list, whose rows are tallest
+   because they carry an icon (region/constellation rows are plain text, so they'll
+   show a little more than 8). Shorter lists just end early, since max-height is a
+   cap, not a fixed height. The ID selectors here beat .field--grow .checklist's
+   max-height regardless of source order, since an ID always outranks two classes. */
+@media (max-width: 640px) {
+  #region-select,
+  #constellation-select,
+  #resource-select {
+    max-height: 16rem;
+  }
+}
+
 /* ---------- price list (per-resource price override) ---------- */
 
 .price-list {
