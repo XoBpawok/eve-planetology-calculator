@@ -5,10 +5,11 @@ export function computeRowRevenue(row, resource, drills, priceKey) {
   return row.output * drills * price;
 }
 
-export function filterRows(rows, { regions = [], constellations = [] } = {}) {
+export function filterRows(rows, { regions = [], constellations = [], resources = [] } = {}) {
   return rows.filter((row) => {
     if (regions.length > 0 && !regions.includes(row.region)) return false;
     if (constellations.length > 0 && !constellations.includes(row.constellation)) return false;
+    if (resources.length > 0 && !resources.includes(row.resource)) return false;
     return true;
   });
 }
@@ -35,6 +36,7 @@ export function bestResourcePerPlanet(rows, resources, drills, priceKey) {
       unitsPerHour: row.output * drills,
       price,
       energy: resource.energy,
+      m3: resource.m3,
       revenue,
     });
   }

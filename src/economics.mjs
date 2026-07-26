@@ -43,10 +43,12 @@ export function allocateFuel(topPlanets, resources, priceKey, gjNeededPerHour) {
 
   const adjustedPlanets = topPlanets.map((p) => {
     const diverted = divertedUnitsByPlanet.get(p.planetId) || 0;
+    const sellableUnits = p.unitsPerHour - diverted;
     return {
       ...p,
       divertedUnits: diverted,
       sellableRevenue: p.revenue - diverted * p.price,
+      sellableVolume: sellableUnits * (p.m3 || 0),
     };
   });
 
@@ -56,7 +58,12 @@ export function allocateFuel(topPlanets, resources, priceKey, gjNeededPerHour) {
 export function applyFuel(topPlanets, resources, priceKey, gjNeededPerHour, fuelEnabled) {
   if (!fuelEnabled) {
     return {
-      adjustedPlanets: topPlanets.map((p) => ({ ...p, divertedUnits: 0, sellableRevenue: p.revenue })),
+      adjustedPlanets: topPlanets.map((p) => ({
+        ...p,
+        divertedUnits: 0,
+        sellableRevenue: p.revenue,
+        sellableVolume: p.unitsPerHour * (p.m3 || 0),
+      })),
       fuelFromExtraction: 0,
       fuelPurchaseCost: 0,
       gjRemaining: 0,
@@ -74,6 +81,7 @@ export function computeProfitBreakdown(adjustedPlanets, fuelPurchaseCost, fuelFr
   } = options;
 
   const gross = adjustedPlanets.reduce((sum, p) => sum + p.sellableRevenue, 0);
+  const volumeHour = adjustedPlanets.reduce((sum, p) => sum + (p.sellableVolume || 0), 0);
   const commission = commissionEnabled ? gross * commissionRate : 0;
   const afterCommission = gross - commission;
   const subscriptionHour = subscriptionEnabled ? subscriptionFeeIsk / 720 : 0;
@@ -81,10 +89,17 @@ export function computeProfitBreakdown(adjustedPlanets, fuelPurchaseCost, fuelFr
 
   return {
     gross,
+    grossMonth: gross * 720,
     commission,
+    commissionMonth: commission * 720,
     fuelFromExtraction,
+    fuelFromExtractionMonth: fuelFromExtraction * 720,
     fuelPurchaseHour: fuelPurchaseCost,
+    fuelPurchaseMonth: fuelPurchaseCost * 720,
     subscriptionHour,
+    subscriptionMonth: subscriptionHour * 720,
+    volumeHour,
+    volumeMonth: volumeHour * 720,
     netHour,
     netDay: netHour * 24,
     netMonth: netHour * 720,

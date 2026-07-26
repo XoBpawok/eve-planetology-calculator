@@ -16,6 +16,7 @@ test('renderPlanetsTableHtml renders one row per planet with its key figures', (
       richness: 'Perfect',
       outputPerDrill: 39.25,
       sellableRevenue: 887835,
+      sellableVolume: 10.2,
     },
   ]);
   assert.match(html, /30-YOU IV/);
@@ -34,6 +35,7 @@ test('renderPlanetsTableHtml escapes HTML-sensitive characters in data', () => {
       richness: 'Medium',
       outputPerDrill: 1,
       sellableRevenue: 1,
+      sellableVolume: 1,
     },
   ]);
   assert.equal(html.includes('<script>'), false);
@@ -43,10 +45,17 @@ test('renderPlanetsTableHtml escapes HTML-sensitive characters in data', () => {
 test('renderSummaryHtml includes labeled net profit figures', () => {
   const html = renderSummaryHtml({
     gross: 100000,
+    grossMonth: 72000000,
     fuelFromExtraction: 1000,
+    fuelFromExtractionMonth: 720000,
     fuelPurchaseHour: 2000,
+    fuelPurchaseMonth: 1440000,
     commission: 8000,
+    commissionMonth: 5760000,
     subscriptionHour: 5000,
+    subscriptionMonth: 3600000,
+    volumeHour: 12.5,
+    volumeMonth: 9000,
     netHour: 84000,
     netDay: 2016000,
     netMonth: 60480000,

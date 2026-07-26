@@ -10,6 +10,10 @@ function formatIsk(value) {
   return Math.round(value).toLocaleString('uk-UA');
 }
 
+function formatVolume(value) {
+  return value.toLocaleString('uk-UA', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+}
+
 export function renderPlanetsTableHtml(adjustedPlanets) {
   if (adjustedPlanets.length === 0) {
     return '<p class="empty">Немає даних для обраних фільтрів</p>';
@@ -37,11 +41,12 @@ export function renderPlanetsTableHtml(adjustedPlanets) {
 
 export function renderSummaryHtml(breakdown) {
   return `<dl class="summary">
-    <dt>Валовий дохід</dt><dd>${formatIsk(breakdown.gross)} ISK/год</dd>
-    <dt>Пальне з видобутку (інфо, вже враховано вище)</dt><dd>-${formatIsk(breakdown.fuelFromExtraction)} ISK/год</dd>
-    <dt>Пальне докуплене</dt><dd>-${formatIsk(breakdown.fuelPurchaseHour)} ISK/год</dd>
-    <dt>Комісія</dt><dd>-${formatIsk(breakdown.commission)} ISK/год</dd>
-    <dt>Абонплата</dt><dd>-${formatIsk(breakdown.subscriptionHour)} ISK/год</dd>
+    <dt>Валовий дохід</dt><dd>${formatIsk(breakdown.grossMonth)} ISK/місяць</dd>
+    <dt>Пальне з видобутку (інфо, вже враховано вище)</dt><dd>-${formatIsk(breakdown.fuelFromExtractionMonth)} ISK/місяць</dd>
+    <dt>Пальне докуплене</dt><dd>-${formatIsk(breakdown.fuelPurchaseMonth)} ISK/місяць</dd>
+    <dt>Комісія</dt><dd>-${formatIsk(breakdown.commissionMonth)} ISK/місяць</dd>
+    <dt>Абонплата</dt><dd>-${formatIsk(breakdown.subscriptionMonth)} ISK/місяць</dd>
+    <dt>Об'єм на продаж / місяць</dt><dd>${formatVolume(breakdown.volumeMonth)} м³</dd>
     <dt>Чистий прибуток / год</dt><dd>${formatIsk(breakdown.netHour)}</dd>
     <dt>Чистий прибуток / добу</dt><dd>${formatIsk(breakdown.netDay)}</dd>
     <dt>Чистий прибуток / місяць</dt><dd>${formatIsk(breakdown.netMonth)}</dd>

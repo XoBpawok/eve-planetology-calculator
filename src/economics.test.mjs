@@ -20,8 +20,8 @@ test('cheapestFuelRate returns null when no resource carries energy', () => {
 
 test('allocateFuel diverts the cheapest ISK/GJ planet first and can fully cover the need', () => {
   const topPlanets = [
-    { planetId: 'P1', resource: 'Liquid Ozone', unitsPerHour: 1000, price: 439, energy: 13, revenue: 439000 },
-    { planetId: 'P2', resource: 'Oxygen Isotopes', unitsPerHour: 1000, price: 4535, energy: 83, revenue: 4535000 },
+    { planetId: 'P1', resource: 'Liquid Ozone', unitsPerHour: 1000, price: 439, energy: 13, m3: 0.4, revenue: 439000 },
+    { planetId: 'P2', resource: 'Oxygen Isotopes', unitsPerHour: 1000, price: 4535, energy: 83, m3: 0.05, revenue: 4535000 },
   ];
   const resources = new Map([
     ['Liquid Ozone', { name: 'Liquid Ozone', avg: 439, low: 475, energy: 13 }],
@@ -38,6 +38,8 @@ test('allocateFuel diverts the cheapest ISK/GJ planet first and can fully cover 
   assert.ok(Math.abs(result.fuelFromExtraction - 10 * 439) < 1e-9);
   assert.ok(Math.abs(p1.sellableRevenue - (439000 - 10 * 439)) < 1e-9);
   assert.equal(p2.sellableRevenue, 4535000);
+  assert.ok(Math.abs(p1.sellableVolume - 990 * 0.4) < 1e-9);
+  assert.ok(Math.abs(p2.sellableVolume - 1000 * 0.05) < 1e-9);
 });
 
 test('allocateFuel buys the shortfall on the market when extraction cannot cover it', () => {
@@ -56,12 +58,13 @@ test('allocateFuel buys the shortfall on the market when extraction cannot cover
 });
 
 test('applyFuel skips diversion and cost entirely when disabled', () => {
-  const topPlanets = [{ planetId: 'P1', unitsPerHour: 100, price: 10, energy: 5, revenue: 1000 }];
+  const topPlanets = [{ planetId: 'P1', unitsPerHour: 100, price: 10, energy: 5, m3: 0.1, revenue: 1000 }];
   const result = applyFuel(topPlanets, new Map(), 'avg', 1000, false);
   assert.equal(result.fuelPurchaseCost, 0);
   assert.equal(result.fuelFromExtraction, 0);
   assert.equal(result.adjustedPlanets[0].sellableRevenue, 1000);
   assert.equal(result.adjustedPlanets[0].divertedUnits, 0);
+  assert.ok(Math.abs(result.adjustedPlanets[0].sellableVolume - 10) < 1e-9);
 });
 
 test('applyFuel delegates to allocateFuel when enabled', () => {
@@ -72,7 +75,10 @@ test('applyFuel delegates to allocateFuel when enabled', () => {
 });
 
 test('computeProfitBreakdown applies commission and subscription and rolls up day/month totals', () => {
-  const adjustedPlanets = [{ sellableRevenue: 100000 }, { sellableRevenue: 50000 }];
+  const adjustedPlanets = [
+    { sellableRevenue: 100000, sellableVolume: 40 },
+    { sellableRevenue: 50000, sellableVolume: 10 },
+  ];
   const breakdown = computeProfitBreakdown(adjustedPlanets, 1000, 500, {
     commissionEnabled: true,
     commissionRate: 0.08,
@@ -80,8 +86,13 @@ test('computeProfitBreakdown applies commission and subscription and rolls up da
     subscriptionFeeIsk: 500_000_000,
   });
   assert.equal(breakdown.gross, 150000);
+  assert.ok(Math.abs(breakdown.grossMonth - 150000 * 720) < 1e-6);
   assert.ok(Math.abs(breakdown.commission - 150000 * 0.08) < 1e-9);
+  assert.ok(Math.abs(breakdown.commissionMonth - 150000 * 0.08 * 720) < 1e-6);
   assert.ok(Math.abs(breakdown.subscriptionHour - 500_000_000 / 720) < 1e-6);
+  assert.ok(Math.abs(breakdown.subscriptionMonth - 500_000_000) < 1e-6);
+  assert.equal(breakdown.volumeHour, 50);
+  assert.equal(breakdown.volumeMonth, 50 * 720);
   const expectedNetHour = 150000 * 0.92 - 1000 - 500_000_000 / 720;
   assert.ok(Math.abs(breakdown.netHour - expectedNetHour) < 1e-6);
   assert.ok(Math.abs(breakdown.netDay - expectedNetHour * 24) < 1e-6);
@@ -89,7 +100,7 @@ test('computeProfitBreakdown applies commission and subscription and rolls up da
 });
 
 test('computeProfitBreakdown zeroes commission and subscription when disabled', () => {
-  const adjustedPlanets = [{ sellableRevenue: 100000 }];
+  const adjustedPlanets = [{ sellableRevenue: 100000, sellableVolume: 5 }];
   const breakdown = computeProfitBreakdown(adjustedPlanets, 0, 0, {
     commissionEnabled: false,
     subscriptionEnabled: false,
@@ -97,4 +108,5 @@ test('computeProfitBreakdown zeroes commission and subscription when disabled', 
   assert.equal(breakdown.commission, 0);
   assert.equal(breakdown.subscriptionHour, 0);
   assert.equal(breakdown.netHour, 100000);
+  assert.equal(breakdown.volumeHour, 5);
 });

@@ -30,6 +30,15 @@ test('filterRows filters by region and by constellation, empty means no filter',
   assert.deepEqual(filterRows(rows, { regions: [], constellations: [] }), rows);
 });
 
+test('filterRows filters by resource, empty means no filter', () => {
+  const rows = [
+    { region: 'R', constellation: 'C', resource: 'Base Metals' },
+    { region: 'R', constellation: 'C', resource: 'Noble Gas' },
+  ];
+  assert.deepEqual(filterRows(rows, { resources: ['Noble Gas'] }), [rows[1]]);
+  assert.deepEqual(filterRows(rows, { resources: [] }), rows);
+});
+
 test('bestResourcePerPlanet keeps only the highest-revenue resource per planet', () => {
   const rows = [
     { planetId: 'P1', region: 'R', constellation: 'C', system: 'S', planetName: 'P1n', planetType: 'Barren', resource: 'A', richness: 'Medium', output: 1 },
@@ -38,7 +47,7 @@ test('bestResourcePerPlanet keeps only the highest-revenue resource per planet',
   ];
   const resources = new Map([
     ['A', { name: 'A', m3: 0.01, avg: 100, low: 90, energy: null }],
-    ['B', { name: 'B', m3: 0.01, avg: 5, low: 5, energy: null }],
+    ['B', { name: 'B', m3: 0.02, avg: 5, low: 5, energy: null }],
   ]);
   const result = bestResourcePerPlanet(rows, resources, 1, 'avg');
   assert.equal(result.length, 2);
@@ -48,6 +57,7 @@ test('bestResourcePerPlanet keeps only the highest-revenue resource per planet',
   assert.equal(p1.revenue, 100);
   assert.equal(p1.unitsPerHour, 1);
   assert.equal(p1.price, 100);
+  assert.equal(p1.m3, 0.01);
   assert.equal(p2.resource, 'A');
   assert.equal(p2.revenue, 500);
 });
