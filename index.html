@@ -23,6 +23,15 @@
         <label for="drills-count">Кількість бурів на планету</label>
         <input type="number" id="drills-count" min="1" value="26" />
       </div>
+      <hr class="panel__divider" />
+      <label class="toggle">
+        <input type="checkbox" id="fuel-enabled" checked />
+        <span>Враховувати витрати на пальне</span>
+      </label>
+      <div class="field">
+        <label for="fuel-modules">Кількість модулів (1 або 2)</label>
+        <input type="number" id="fuel-modules" min="1" max="2" value="2" />
+      </div>
     </div>
 
     <div class="panel">
@@ -86,10 +95,7 @@
       <div class="field">
         <input type="number" id="commission-custom" min="0" max="100" step="0.1" value="25" />
       </div>
-    </div>
-
-    <div class="panel">
-      <h2 class="panel__title">Абонплата</h2>
+      <hr class="panel__divider" />
       <label class="toggle">
         <input type="checkbox" id="subscription-enabled" checked />
         <span>Враховувати абонплату</span>
@@ -97,18 +103,6 @@
       <div class="field">
         <label for="subscription-millions">Абонплата (млн ISK / місяць)</label>
         <input type="number" id="subscription-millions" min="0" value="500" />
-      </div>
-    </div>
-
-    <div class="panel">
-      <h2 class="panel__title">Пальне</h2>
-      <label class="toggle">
-        <input type="checkbox" id="fuel-enabled" checked />
-        <span>Враховувати витрати на пальне</span>
-      </label>
-      <div class="field">
-        <label for="fuel-modules">Кількість модулів (1 або 2)</label>
-        <input type="number" id="fuel-modules" min="1" max="2" value="2" />
       </div>
     </div>
   </section>
