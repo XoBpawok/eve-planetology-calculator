@@ -34,27 +34,31 @@
       </div>
     </div>
 
-    <div class="panel">
+    <div class="panel panel--span2">
       <h2 class="panel__title">Місце розташування</h2>
-      <div class="field">
-        <div class="checklist-label-row">
-          <label>Регіони</label>
-          <div class="checklist-actions">
-            <button type="button" class="link-btn" data-checklist="region-select" data-action="all">Всі</button>
-            <button type="button" class="link-btn" data-checklist="region-select" data-action="none">Жодного</button>
+      <div class="panel__columns">
+        <div class="field field--grow">
+          <div class="checklist-label-row">
+            <label>Регіони</label>
+            <div class="checklist-actions">
+              <button type="button" class="link-btn" data-checklist="region-select" data-action="all">Всі</button>
+              <button type="button" class="link-btn" data-checklist="region-select" data-action="none">Жодного</button>
+            </div>
           </div>
+          <input type="search" class="checklist-search" data-checklist="region-select" placeholder="Пошук…" aria-label="Пошук: Регіони" />
+          <div class="checklist" id="region-select" role="group" aria-label="Регіони"></div>
         </div>
-        <div class="checklist" id="region-select" role="group" aria-label="Регіони"></div>
-      </div>
-      <div class="field">
-        <div class="checklist-label-row">
-          <label>Сузір'я</label>
-          <div class="checklist-actions">
-            <button type="button" class="link-btn" data-checklist="constellation-select" data-action="all">Всі</button>
-            <button type="button" class="link-btn" data-checklist="constellation-select" data-action="none">Жодного</button>
+        <div class="field field--grow">
+          <div class="checklist-label-row">
+            <label>Сузір'я</label>
+            <div class="checklist-actions">
+              <button type="button" class="link-btn" data-checklist="constellation-select" data-action="all">Всі</button>
+              <button type="button" class="link-btn" data-checklist="constellation-select" data-action="none">Жодного</button>
+            </div>
           </div>
+          <input type="search" class="checklist-search" data-checklist="constellation-select" placeholder="Пошук…" aria-label="Пошук: Сузір'я" />
+          <div class="checklist" id="constellation-select" role="group" aria-label="Сузір'я"></div>
         </div>
-        <div class="checklist" id="constellation-select" role="group" aria-label="Сузір'я"></div>
       </div>
     </div>
 
