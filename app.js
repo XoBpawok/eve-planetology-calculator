@@ -509,10 +509,14 @@ function attachListeners() {
 
   [els.regionSearch, els.constellationSearch, els.resourceSearch].forEach((input) => {
     if (!input) return;
-    input.addEventListener('input', () => {
+    const handleSearchInput = () => {
       const container = document.getElementById(input.dataset.checklist);
       applyChecklistSearch(container);
-    });
+    };
+    // 'search' fires on the native (x) clear button in some browsers where
+    // clicking it doesn't reliably emit 'input' (historically Safari/WebKit).
+    input.addEventListener('input', handleSearchInput);
+    input.addEventListener('search', handleSearchInput);
   });
 
   els.filtersResetAll.addEventListener('click', resetFiltersToDefault);

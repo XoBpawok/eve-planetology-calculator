@@ -268,6 +268,16 @@ body {
   grid-column: span 2;
 }
 
+/* Below ~400px, .controls' auto-fit grid collapses to a single explicit
+   track, but the span-2 rule above still tries to open an implicit second
+   column, pushing content off-screen. Drop back to a single column here so
+   panels stay full-width instead of overflowing the viewport. */
+@media (max-width: 420px) {
+  .panel--span2 {
+    grid-column: auto;
+  }
+}
+
 .panel__columns {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -280,10 +290,11 @@ body {
   margin: 0.3rem 0;
 }
 
-/* Matches the combined height of the two stacked lists in "Місце розташування"
-   with a capped-but-fluid height (instead of flex-filling the row, which made this
-   checklist's intrinsic size unbounded and blew out the whole grid row). The vh
-   component lets it use more of a tall viewport rather than sitting fixed-small. */
+/* Taller height cap for checklists that get a full panel column to themselves
+   (Регіони, Сузір'я, Ресурси), given as a capped-but-fluid height (instead of
+   flex-filling the row, which made each checklist's intrinsic size unbounded
+   and blew out the whole grid row). The vh component lets it use more of a
+   tall viewport rather than sitting fixed-small. */
 .field--grow .checklist {
   max-height: clamp(9rem, 24vh, 22rem);
 }
