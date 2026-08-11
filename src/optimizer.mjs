@@ -14,16 +14,30 @@ export function filterRows(rows, { regions = [], constellations = [], resources 
   });
 }
 
-export function bestResourcePerPlanet(rows, resources, drills, priceKey) {
-  const best = new Map();
+export function selectTopPlanets(rows, resources, drills, priceKey, n, resourceLimits = {}) {
+  const scored = [];
   for (const row of rows) {
     const resource = resources.get(row.resource);
     const revenue = computeRowRevenue(row, resource, drills, priceKey);
     if (revenue === null) continue;
-    const existing = best.get(row.planetId);
-    if (existing && revenue <= existing.revenue) continue;
+    scored.push({ row, resource, revenue });
+  }
+  scored.sort((a, b) => b.revenue - a.revenue);
+
+  const selectedPlanetIds = new Set();
+  const resourceCounts = new Map();
+  const result = [];
+  for (const { row, resource, revenue } of scored) {
+    if (result.length >= n) break;
+    if (selectedPlanetIds.has(row.planetId)) continue;
+    const limit = resourceLimits[row.resource];
+    const count = resourceCounts.get(row.resource) || 0;
+    if (limit != null && count >= limit) continue;
+
+    selectedPlanetIds.add(row.planetId);
+    resourceCounts.set(row.resource, count + 1);
     const price = priceKey === 'avg' ? resource.avg : resource.low;
-    best.set(row.planetId, {
+    result.push({
       planetId: row.planetId,
       region: row.region,
       constellation: row.constellation,
@@ -40,9 +54,5 @@ export function bestResourcePerPlanet(rows, resources, drills, priceKey) {
       revenue,
     });
   }
-  return Array.from(best.values());
-}
-
-export function topNPlanets(bestPerPlanet, n) {
-  return [...bestPerPlanet].sort((a, b) => b.revenue - a.revenue).slice(0, n);
+  return result;
 }
