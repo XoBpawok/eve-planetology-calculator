@@ -408,7 +408,7 @@ input[type='number']:focus {
   min-width: 0;
 }
 
-.checklist__limit {
+input.checklist__limit {
   flex: none;
   width: 2.75rem;
   background: var(--bg-panel);
@@ -419,7 +419,7 @@ input[type='number']:focus {
   text-align: center;
 }
 
-.checklist__limit:focus {
+input.checklist__limit:focus {
   outline: none;
   border-color: var(--cyan);
 }
