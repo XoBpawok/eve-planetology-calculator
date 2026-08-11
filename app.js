@@ -50,6 +50,9 @@ const els = {
   regionSelect: document.getElementById('region-select'),
   constellationSelect: document.getElementById('constellation-select'),
   resourceSelect: document.getElementById('resource-select'),
+  regionSearch: document.querySelector('.checklist-search[data-checklist="region-select"]'),
+  constellationSearch: document.querySelector('.checklist-search[data-checklist="constellation-select"]'),
+  resourceSearch: document.querySelector('.checklist-search[data-checklist="resource-select"]'),
   commissionEnabled: document.getElementById('commission-enabled'),
   commissionCustom: document.getElementById('commission-custom'),
   subscriptionEnabled: document.getElementById('subscription-enabled'),
@@ -189,6 +192,20 @@ function renderChecklistOptions(container, values, isChecked, getIconUrl, getLim
   }
 }
 
+// Purely visual: hides checklist rows that don't match the adjacent search
+// input, without touching which checkboxes are checked. Re-run after any
+// renderChecklistOptions() call on a container that has a search input,
+// since that rebuilds the DOM from scratch.
+function applyChecklistSearch(container) {
+  const search = document.querySelector(`.checklist-search[data-checklist="${container.id}"]`);
+  if (!search) return;
+  const query = search.value.trim().toLowerCase();
+  container.querySelectorAll('.checklist__item').forEach((item) => {
+    const label = item.querySelector('.checklist__label').textContent.toLowerCase();
+    item.style.display = query && !label.includes(query) ? 'none' : '';
+  });
+}
+
 // Patches icons onto an already-rendered resource checklist in place (no rebuild),
 // so it doesn't clobber checkboxes the user has already toggled while the
 // echoes.mobi request was still in flight.
@@ -278,6 +295,7 @@ function populateConstellationOptions() {
     const saved = pendingSavedConstellations;
     pendingSavedConstellations = null;
     renderChecklistOptions(els.constellationSelect, constellations, (value) => saved.has(value));
+    applyChecklistSearch(els.constellationSelect);
     return;
   }
   const previousValues = checklistValues(els.constellationSelect);
@@ -285,12 +303,14 @@ function populateConstellationOptions() {
   // Only items the user explicitly unchecked stay excluded; anything new defaults to checked.
   const previouslyExcluded = new Set(previousValues.filter((v) => !previouslyChecked.has(v)));
   renderChecklistOptions(els.constellationSelect, constellations, (value) => !previouslyExcluded.has(value));
+  applyChecklistSearch(els.constellationSelect);
 }
 
 function populateFilterOptions() {
   const regions = [...new Set(state.rows.map((r) => r.region))].sort();
   const savedRegions = state.savedFilters?.regions ? new Set(state.savedFilters.regions) : null;
   renderChecklistOptions(els.regionSelect, regions, (v) => (savedRegions ? savedRegions.has(v) : true));
+  applyChecklistSearch(els.regionSelect);
   if (state.savedFilters?.constellations) {
     pendingSavedConstellations = new Set(state.savedFilters.constellations);
   }
@@ -305,15 +325,19 @@ function populateFilterOptions() {
     (v) => state.resourceIcons.get(v),
     (v) => (Object.prototype.hasOwnProperty.call(savedLimits, v) ? savedLimits[v] : null)
   );
+  applyChecklistSearch(els.resourceSelect);
 }
 
 function resetFiltersToDefault() {
   const regions = [...new Set(state.rows.map((r) => r.region))].sort();
   renderChecklistOptions(els.regionSelect, regions, () => true);
+  applyChecklistSearch(els.regionSelect);
   const constellations = constellationsForRegions([]);
   renderChecklistOptions(els.constellationSelect, constellations, () => true);
+  applyChecklistSearch(els.constellationSelect);
   const resourceNames = [...new Set(state.rows.map((r) => r.resource))].sort();
   renderChecklistOptions(els.resourceSelect, resourceNames, () => true, (v) => state.resourceIcons.get(v), () => null);
+  applyChecklistSearch(els.resourceSelect);
   computeAndRender();
 }
 
@@ -480,6 +504,14 @@ function attachListeners() {
         cb.checked = checked;
       });
       container.dispatchEvent(new Event('change'));
+    });
+  });
+
+  [els.regionSearch, els.constellationSearch, els.resourceSearch].forEach((input) => {
+    if (!input) return;
+    input.addEventListener('input', () => {
+      const container = document.getElementById(input.dataset.checklist);
+      applyChecklistSearch(container);
     });
   });
 
