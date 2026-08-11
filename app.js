@@ -1,5 +1,5 @@
 import { parseResources, parsePlanetRows } from './src/csv.mjs';
-import { filterRows, bestResourcePerPlanet, topNPlanets } from './src/optimizer.mjs';
+import { filterRows, selectTopPlanets } from './src/optimizer.mjs';
 import { applyFuel, computeProfitBreakdown } from './src/economics.mjs';
 import { renderPlanetsTableHtml, renderSummaryHtml } from './src/render.mjs';
 
@@ -87,6 +87,7 @@ function computeBestConstellationResult({
   drills,
   priceKey,
   n,
+  resourceLimits,
   gjNeededPerHour,
   fuelEnabled,
   financeOptions,
@@ -98,8 +99,7 @@ function computeBestConstellationResult({
   let winner = null;
   for (const constellation of candidates) {
     const rows = rowsByConstellation.get(constellation);
-    const best = bestResourcePerPlanet(rows, resources, drills, priceKey);
-    const top = topNPlanets(best, n);
+    const top = selectTopPlanets(rows, resources, drills, priceKey, n, resourceLimits);
     const { adjustedPlanets, fuelFromExtraction, fuelPurchaseCost } = applyFuel(
       top,
       resources,
@@ -134,7 +134,21 @@ function checkedChecklistValues(container) {
   return Array.from(container.querySelectorAll('input[type="checkbox"]:checked')).map((i) => i.value);
 }
 
-function renderChecklistOptions(container, values, isChecked, getIconUrl) {
+// Reads the per-resource planet caps from the number inputs rendered
+// alongside each resource checkbox. Empty inputs mean "no cap" and are
+// omitted from the result entirely.
+function resourceLimitValues(container) {
+  const limits = {};
+  container.querySelectorAll('.checklist__limit').forEach((input) => {
+    if (input.value === '') return;
+    const value = Number(input.value);
+    if (!Number.isFinite(value) || value < 1) return;
+    limits[input.dataset.resource] = value;
+  });
+  return limits;
+}
+
+function renderChecklistOptions(container, values, isChecked, getIconUrl, getLimit) {
   container.innerHTML = '';
   for (const value of values) {
     const label = document.createElement('label');
@@ -154,8 +168,23 @@ function renderChecklistOptions(container, values, isChecked, getIconUrl) {
       label.appendChild(img);
     }
     const span = document.createElement('span');
+    span.className = 'checklist__label';
     span.textContent = value;
+    span.title = value;
     label.appendChild(span);
+    if (getLimit) {
+      const limitInput = document.createElement('input');
+      limitInput.type = 'number';
+      limitInput.className = 'checklist__limit';
+      limitInput.min = '1';
+      limitInput.step = '1';
+      limitInput.placeholder = '∞';
+      limitInput.title = 'Максимум планет з цим ресурсом';
+      limitInput.dataset.resource = value;
+      const limit = getLimit(value);
+      if (limit != null) limitInput.value = limit;
+      label.appendChild(limitInput);
+    }
     container.appendChild(label);
   }
 }
@@ -205,6 +234,7 @@ function persistState() {
       regions: checkedChecklistValues(els.regionSelect),
       constellations: checkedChecklistValues(els.constellationSelect),
       resources: checkedChecklistValues(els.resourceSelect),
+      resourceLimits: resourceLimitValues(els.resourceSelect),
     },
     priceOverrides: Object.fromEntries(state.priceOverrides),
     lastManualPriceEditAt: state.lastManualPriceEditAt,
@@ -267,11 +297,13 @@ function populateFilterOptions() {
   populateConstellationOptions();
   const resourceNames = [...new Set(state.rows.map((r) => r.resource))].sort();
   const savedResources = state.savedFilters?.resources ? new Set(state.savedFilters.resources) : null;
+  const savedLimits = state.savedFilters?.resourceLimits || {};
   renderChecklistOptions(
     els.resourceSelect,
     resourceNames,
     (v) => (savedResources ? savedResources.has(v) : true),
-    (v) => state.resourceIcons.get(v)
+    (v) => state.resourceIcons.get(v),
+    (v) => (Object.prototype.hasOwnProperty.call(savedLimits, v) ? savedLimits[v] : null)
   );
 }
 
@@ -281,7 +313,7 @@ function resetFiltersToDefault() {
   const constellations = constellationsForRegions([]);
   renderChecklistOptions(els.constellationSelect, constellations, () => true);
   const resourceNames = [...new Set(state.rows.map((r) => r.resource))].sort();
-  renderChecklistOptions(els.resourceSelect, resourceNames, () => true, (v) => state.resourceIcons.get(v));
+  renderChecklistOptions(els.resourceSelect, resourceNames, () => true, (v) => state.resourceIcons.get(v), () => null);
   computeAndRender();
 }
 
@@ -366,6 +398,7 @@ function computeAndRender() {
   const regions = checkedChecklistValues(els.regionSelect);
   const constellations = checkedChecklistValues(els.constellationSelect);
   const resources = checkedChecklistValues(els.resourceSelect);
+  const resourceLimits = resourceLimitValues(els.resourceSelect);
   const commissionEnabled = els.commissionEnabled.checked;
   const commissionRate = selectedCommissionRate();
   const subscriptionEnabled = els.subscriptionEnabled.checked;
@@ -393,6 +426,7 @@ function computeAndRender() {
       drills,
       priceKey,
       n,
+      resourceLimits,
       gjNeededPerHour,
       fuelEnabled,
       financeOptions,
