@@ -347,6 +347,27 @@ input[type='number']:focus {
   text-shadow: 0 0 6px rgba(56, 228, 255, 0.5);
 }
 
+.checklist-search {
+  background: var(--bg-field);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0.3rem 0.5rem;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.checklist-search:focus {
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 1px var(--cyan);
+}
+
+.checklist-search::-webkit-search-cancel-button {
+  cursor: pointer;
+}
+
 .checklist {
   background: var(--bg-field);
   border: 1px solid var(--border);
