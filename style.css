@@ -406,6 +406,9 @@ input[type='number']:focus {
 .checklist__label {
   flex: 1 1 auto;
   min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 input.checklist__limit {

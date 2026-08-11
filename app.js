@@ -170,6 +170,7 @@ function renderChecklistOptions(container, values, isChecked, getIconUrl, getLim
     const span = document.createElement('span');
     span.className = 'checklist__label';
     span.textContent = value;
+    span.title = value;
     label.appendChild(span);
     if (getLimit) {
       const limitInput = document.createElement('input');
