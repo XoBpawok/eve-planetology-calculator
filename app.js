@@ -351,7 +351,17 @@ async function fetchEchoesResourceData() {
     for (const item of data.resources ?? []) {
       const name = item.name?.trim();
       if (!name) continue;
-      prices.set(name, { avgPrice: item.avgPrice ?? null, iconUrl: item.iconUrl ?? null });
+      const avgPrice = item.avgPrice ?? null;
+      const iconUrl = item.iconUrl ?? null;
+      const existing = prices.get(name);
+      // echoes.mobi occasionally lists the same resource twice with a stale
+      // zero-price duplicate (e.g. Heavy Water); don't let that clobber a
+      // real price that was already seen for this name.
+      if (existing && existing.avgPrice && !avgPrice) {
+        if (iconUrl && !existing.iconUrl) existing.iconUrl = iconUrl;
+        continue;
+      }
+      prices.set(name, { avgPrice, iconUrl: iconUrl ?? existing?.iconUrl ?? null });
     }
     const parsedLatestDate = data.latestDate ? new Date(data.latestDate) : null;
     if (parsedLatestDate && !Number.isNaN(parsedLatestDate.getTime())) latestDate = parsedLatestDate;

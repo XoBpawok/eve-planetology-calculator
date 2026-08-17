@@ -29,23 +29,30 @@ async function fetchEchoesItems() {
 async function main() {
   const items = await fetchEchoesItems();
 
-  const resources = [];
+  const resourcesByName = new Map();
   let latestDate = null;
   for (const item of items) {
     const name = item.name?.trim();
     if (!name) continue;
     const avgPrice = Number(item.weekly_average_price);
     const dateUpdated = item.date_updated ?? null;
-    resources.push({
+    const resource = {
       name,
       avgPrice: Number.isFinite(avgPrice) ? avgPrice : null,
       iconUrl: item.icon_url || null,
-    });
+    };
+    const existing = resourcesByName.get(name);
+    // echoes.mobi sometimes lists the same resource name twice (e.g. a stale
+    // zero-price duplicate); keep whichever entry actually has a price.
+    if (!existing || (!existing.avgPrice && resource.avgPrice)) {
+      resourcesByName.set(name, resource);
+    }
     const updatedAt = dateUpdated ? new Date(dateUpdated) : null;
     if (updatedAt && !Number.isNaN(updatedAt.getTime()) && (!latestDate || updatedAt > latestDate)) {
       latestDate = updatedAt;
     }
   }
+  const resources = [...resourcesByName.values()];
 
   const payload = {
     fetchedAt: new Date().toISOString(),
