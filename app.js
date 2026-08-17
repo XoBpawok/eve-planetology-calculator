@@ -429,7 +429,7 @@ function computeAndRender() {
   const subscriptionFeeIsk = Number(els.subscriptionMillions.value || 0) * 1_000_000;
   const fuelEnabled = els.fuelEnabled.checked;
   const modules = Number(els.fuelModules.value) || 0;
-  const gjNeededPerHour = (modules * 9000) / 24;
+  const gjNeededPerHour = modules * 9000;
 
   // Region/resource filters narrow the candidate pool; constellation isn't applied
   // as a flat filter here because each candidate constellation is scored on its own.
